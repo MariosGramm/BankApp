@@ -11,5 +11,5 @@ public interface IAccountDAO {
     void remove(String iban);
     Optional<Account> getByIban(String iban);
     List<Account> getAccounts();
-    List<Account> getByName(String fullName);
+    List<Account> getByName(String firstname,String lastname);
 }

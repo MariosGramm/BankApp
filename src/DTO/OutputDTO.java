@@ -5,17 +5,20 @@ import java.math.BigDecimal;
 public class OutputDTO {
     private String iban;
     private BigDecimal balance;
-    private String fullName;
+    private String firstname;
+    private String lastName;
 
-    public OutputDTO(){
+    public OutputDTO() {
 
     }
 
-    public OutputDTO(String iban, BigDecimal balance, String fullName) {
+    public OutputDTO(String iban, BigDecimal balance, String firstname, String lastName) {
         this.iban = iban;
         this.balance = balance;
-        this.fullName = fullName;
+        this.firstname = firstname;
+        this.lastName = lastName;
     }
+
 
     public String getIban() {
         return iban;
@@ -33,12 +36,20 @@ public class OutputDTO {
         this.balance = balance;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     @Override
@@ -46,7 +57,8 @@ public class OutputDTO {
         return "OutputDTO{" +
                 "iban='" + iban + '\'' +
                 ", balance=" + balance +
-                ", fullName='" + fullName + '\'' +
+                ", firstName='" + firstname + '\'' +
+                ", lastName='" + lastName + '\'' +
                 '}';
     }
 }

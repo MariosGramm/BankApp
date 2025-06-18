@@ -36,9 +36,9 @@ public class ImplementAccountDAO implements IAccountDAO {
     }
 
     @Override
-    public List<Account> getByName(String fullName) {
+    public List<Account> getByName(String firstname,String lastname) {
         return accounts.stream()
-                .filter(account -> account.getFullName().equals(fullName))
+                .filter(account -> (account.getFirstname().equals(firstname) && account.getLastname().equals(lastname)))
                 .collect(Collectors.toList());
     }
 }

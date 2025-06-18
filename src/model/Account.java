@@ -10,16 +10,18 @@ import java.util.Objects;
 public class Account {
     private String iban;
     private BigDecimal balance;
-    private String fullName;
+    private String firstname;
+    private String lastname;
 
     public Account(){
 
     }
 
-    public Account(String iban, BigDecimal balance, String fullName) {
+    public Account(String iban, BigDecimal balance, String firstName, String lastname) {
         this.iban = iban;
         this.balance = balance;
-        this.fullName = fullName;
+        this.firstname = firstName;
+        this.lastname = lastname;
     }
 
     public String getIban() {
@@ -38,12 +40,20 @@ public class Account {
         this.balance = balance;
     }
 
-    public String getFullName() {
-        return fullName;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
+    }
+
+    public String getLastname() {
+        return lastname;
+    }
+
+    public void setLastname(String lastname) {
+        this.lastname = lastname;
     }
 
     @Override
