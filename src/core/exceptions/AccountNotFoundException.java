@@ -1,4 +1,4 @@
-package exceptions;
+package core.exceptions;
 
 public class AccountNotFoundException extends Exception {
     public AccountNotFoundException(String message) {
