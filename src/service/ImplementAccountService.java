@@ -133,12 +133,17 @@ public class ImplementAccountService implements IAccountService{
 
     @Override
     public List<OutputDTO> getAccountsByName(String firstname, String lastname)throws AccountNotFoundException {
-        List<Account> accounts = accountDAO.getByName(firstname,lastname);
+            List<Account> accounts = accountDAO.getByName(firstname,lastname);
 
-        if (accounts.isEmpty()){
-            throw new AccountNotFoundException("The provided name: (" + lastname + firstname + ") does not own any accounts");
+        try {
+            if (accounts.isEmpty()) {
+                throw new AccountNotFoundException("The provided name: (" + lastname + firstname + ") does not own any accounts");
+            }
+
+            return new ArrayList<>(accounts.stream().map((account) -> new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname())).collect(Collectors.toList()));
+        }catch (AccountNotFoundException e){
+            System.err.printf("%s.The account with the name [%s + %s] was not found. \n %s", LocalDateTime.now(), lastname,firstname, e);
+            throw e;
         }
-
-        return new ArrayList<>(accounts.stream().map((account)->new OutputDTO(account.getIban(), account.getBalance(),account.getFirstname(),account.getLastname())).collect(Collectors.toList()));
     }
 }
