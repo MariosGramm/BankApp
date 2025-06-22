@@ -7,16 +7,18 @@ public class InputDTO {
     private BigDecimal balance;
     private String firstname;
     private String lastname;
+    private String email;
 
     public InputDTO() {
 
     }
 
-    public InputDTO(String iban, BigDecimal balance, String firstName, String lastname) {
+    public InputDTO(String iban, BigDecimal balance, String firstname, String lastname, String email) {
         this.iban = iban;
         this.balance = balance;
-        this.firstname = firstName;
+        this.firstname = firstname;
         this.lastname = lastname;
+        this.email = email;
     }
 
     public String getIban() {
@@ -51,13 +53,22 @@ public class InputDTO {
         this.lastname = lastname;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public String toString() {
         return "InputDTO{" +
                 "iban='" + iban + '\'' +
                 ", balance=" + balance +
-                ", firstName='" + firstname + '\'' +
+                ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
+                ", email='" + email + '\'' +
                 '}';
     }
 }

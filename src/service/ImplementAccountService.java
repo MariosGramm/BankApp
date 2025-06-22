@@ -124,7 +124,7 @@ public class ImplementAccountService implements IAccountService{
             Account account = accountDAO.getByIban(iban)
                     .orElseThrow(() -> new AccountNotFoundException("Account with iban" + iban + "not found"));
 
-            return new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname());
+            return new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(),account.getEmail());
         }catch (AccountNotFoundException e){
             System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(), iban, e);
             throw e;
@@ -140,7 +140,7 @@ public class ImplementAccountService implements IAccountService{
                 throw new AccountNotFoundException("The provided name: (" + lastname + firstname + ") does not own any accounts");
             }
 
-            return new ArrayList<>(accounts.stream().map((account) -> new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname())).collect(Collectors.toList()));
+            return new ArrayList<>(accounts.stream().map((account) -> new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(), account.getEmail())).collect(Collectors.toList()));
         }catch (AccountNotFoundException e){
             System.err.printf("%s.The account with the name [%s + %s] was not found. \n %s", LocalDateTime.now(), lastname,firstname, e);
             throw e;

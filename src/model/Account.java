@@ -12,16 +12,18 @@ public class Account {
     private BigDecimal balance;
     private String firstname;
     private String lastname;
+    private String email;
 
     public Account(){
 
     }
 
-    public Account(String iban, BigDecimal balance, String firstName, String lastname) {
+    public Account(String iban, BigDecimal balance, String firstname, String lastname, String email) {
         this.iban = iban;
         this.balance = balance;
-        this.firstname = firstName;
+        this.firstname = firstname;
         this.lastname = lastname;
+        this.email = email;
     }
 
     public String getIban() {
@@ -54,6 +56,14 @@ public class Account {
 
     public void setLastname(String lastname) {
         this.lastname = lastname;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override
