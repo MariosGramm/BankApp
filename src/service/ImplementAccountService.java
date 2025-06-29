@@ -1,12 +1,10 @@
 package service;
 
 import DAO.IAccountDAO;
+import DAO.ImplementAccountDAO;
 import DTO.InputDTO;
 import DTO.OutputDTO;
-import core.exceptions.AccountNotFoundException;
-import core.exceptions.DuplicateIbanException;
-import core.exceptions.InsufficientBalanceException;
-import core.exceptions.NegativeAmountException;
+import core.exceptions.*;
 import core.mapper.Mapper;
 import model.Account;
 
@@ -14,6 +12,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -24,17 +23,39 @@ public class ImplementAccountService implements IAccountService{
         this.accountDAO = accountDAO;       //injection of dependency
     }
 
-    public boolean createNewAccount(InputDTO dto) throws DuplicateIbanException {
+    @Override
+    public Account authenticate(String username, String password) throws AccountNotFoundException {
+        return accountDAO.getByUsername(username)
+                .filter(account -> account.getPassword().equals(password))
+                .orElseThrow(()->new AccountNotFoundException("Invalid username or password"));
+    }
+
+    public boolean createNewAccount(InputDTO dto) throws DuplicateIbanException, DuplicateUsernameException, NegativeAmountException {
         try {
             Account account = Mapper.mapToModelEntity(dto);
 
             if (accountDAO.getByIban(account.getIban()).isPresent()){
                 throw new DuplicateIbanException("The provided IBAN" + account.getIban()+ "belongs to an existing account");
             }
+
+            if (accountDAO.getByUsername(account.getUsername()).isPresent()){
+                throw new DuplicateUsernameException("The provided username" + account.getUsername() + "belongs to an existing account");
+            }
+
+            if (dto.getBalance().compareTo(BigDecimal.ZERO) < 0){
+                throw new NegativeAmountException("Amount cannot be negative");
+            }
+
             accountDAO.saveOrUpdate(account);
             return true;
         }catch (DuplicateIbanException e){
             System.err.printf("%s.IBAN is unique for every account \n %s",LocalDateTime.now(),e);
+            throw e;
+        }catch (DuplicateUsernameException e){
+            System.err.printf("%s.Username is unique for every account \n %s",LocalDateTime.now(),e);
+            throw e;
+        }catch (NegativeAmountException e){
+            System.err.printf("%s.The amount provided (%f) is negative. \n %s" , LocalDateTime.now(),dto.getBalance(),e);
             throw e;
         }
     }
@@ -45,8 +66,8 @@ public class ImplementAccountService implements IAccountService{
             Account account = accountDAO.getByIban(dto.getIban())
                     .orElseThrow(() -> new AccountNotFoundException("Account with iban" + dto.getIban() + "not found"));
 
-            account.setFirstname(dto.getFirstname());
-            account.setLastname(dto.getLastname());
+            account.setEmail(dto.getEmail());
+            account.setUsername(dto.getUsername());
             return true;
         }catch (AccountNotFoundException e){
             System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(),dto.getIban(),e);
@@ -124,7 +145,7 @@ public class ImplementAccountService implements IAccountService{
             Account account = accountDAO.getByIban(iban)
                     .orElseThrow(() -> new AccountNotFoundException("Account with iban" + iban + "not found"));
 
-            return new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(),account.getEmail());
+            return new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(),account.getEmail(),account.getUsername());
         }catch (AccountNotFoundException e){
             System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(), iban, e);
             throw e;
@@ -140,7 +161,7 @@ public class ImplementAccountService implements IAccountService{
                 throw new AccountNotFoundException("The provided name: (" + lastname + firstname + ") does not own any accounts");
             }
 
-            return new ArrayList<>(accounts.stream().map((account) -> new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(), account.getEmail())).collect(Collectors.toList()));
+            return new ArrayList<>(accounts.stream().map((account) -> new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(), account.getEmail(), account.getUsername())).collect(Collectors.toList()));
         }catch (AccountNotFoundException e){
             System.err.printf("%s.The account with the name [%s + %s] was not found. \n %s", LocalDateTime.now(), lastname,firstname, e);
             throw e;

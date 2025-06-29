@@ -12,4 +12,5 @@ public interface IAccountDAO {
     Optional<Account> getByIban(String iban);
     List<Account> getAccounts();
     List<Account> getByName(String firstname,String lastname);
+    Optional<Account> getByUsername(String username);
 }

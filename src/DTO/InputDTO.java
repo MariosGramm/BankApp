@@ -8,17 +8,21 @@ public class InputDTO {
     private String firstname;
     private String lastname;
     private String email;
+    private String username;
+    private String password;
 
     public InputDTO() {
 
     }
 
-    public InputDTO(String iban, BigDecimal balance, String firstname, String lastname, String email) {
+    public InputDTO(String iban, BigDecimal balance, String firstname, String lastname, String email, String username, String password) {
         this.iban = iban;
         this.balance = balance;
         this.firstname = firstname;
         this.lastname = lastname;
         this.email = email;
+        this.username = username;
+        this.password = password;
     }
 
     public String getIban() {
@@ -61,6 +65,22 @@ public class InputDTO {
         this.email = email;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     @Override
     public String toString() {
         return "InputDTO{" +
@@ -69,6 +89,7 @@ public class InputDTO {
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", email='" + email + '\'' +
+                ", username='" + username + '\'' +
                 '}';
     }
 }

@@ -20,6 +20,8 @@ public class Validator {
         validateFirstname(dto.getFirstname(), errors);
         validateLastname(dto.getLastname(), errors);
         validateEmail(dto.getEmail(),errors);
+        validateUsername(dto.getUsername(),errors);
+        validatePassword(dto.getPassword(), errors);
 
         return errors;
     }
@@ -62,5 +64,22 @@ public class Validator {
         }else if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")){
             errors.put("email","Invalid email format");
         }
+    }
+
+    private static void validateUsername(String username,Map<String,String> errors) {
+        if (username == null) {
+            errors.put("username","Username is required");
+        }else if (!username.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{1,8}$\n")){
+            errors.put("username", "Invalid username");
+        }
+    }
+
+    private static void validatePassword(String password,Map<String,String> errors) {
+        if (password == null) {
+            errors.put("password","Password is required");
+        }else if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-\\[\\]{};':\"\\\\|,.<>/?]).{4,12}$")) {
+            errors.put("password", "Invalid username");
+        }
+))
     }
 }

@@ -11,10 +11,10 @@ public class Mapper {
     }
 
     public static Account mapToModelEntity(InputDTO dto){
-        return new Account(dto.getIban(),dto.getBalance(), dto.getFirstname(), dto.getLastname(), dto.getEmail());
+        return new Account(dto.getIban(),dto.getBalance(), dto.getFirstname(), dto.getLastname(), dto.getEmail(), dto.getUsername(), dto.getPassword());
     }
 
     public static OutputDTO mapToOutputDTO(Account account){
-        return new OutputDTO(account.getIban(),account.getBalance(), account.getFirstname(), account.getLastname(), account.getEmail());
+        return new OutputDTO(account.getIban(),account.getBalance(), account.getFirstname(), account.getLastname(), account.getEmail(),account.getUsername());
     }
 }
