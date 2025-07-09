@@ -5,7 +5,7 @@ import java.util.Objects;
 
 /**
  * A model class representing a bank account.
- * Contains the account's IBAN and balance.
+ * Contains the account's IBAN, balance, firstname, lastname, email, username, password.
  */
 public class Account {
     private String iban;

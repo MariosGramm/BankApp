@@ -76,13 +76,12 @@ public class OutputDTO {
 
     @Override
     public String toString() {
-        return "OutputDTO{" +
-                "iban='" + iban + '\'' +
-                ", balance=" + balance +
-                ", firstname='" + firstname + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", username='" + username + '\'' +
-                '}';
+        return "Account found:" + "\n" +
+                "iban: " + iban + "\n"+
+                "balance: " + balance + "\n" +
+                "firstname: " + firstname + "\n" +
+                "lastName: " + lastName + "\n" +
+                "email: " + email + "\n" +
+                "username: " + username ;
     }
 }

@@ -1,17 +1,15 @@
 import DAO.IAccountDAO;
 import DAO.ImplementAccountDAO;
 import DTO.InputDTO;
-import core.exceptions.AccountNotFoundException;
-import core.exceptions.DuplicateIbanException;
-import core.exceptions.DuplicateUsernameException;
-import core.exceptions.NegativeAmountException;
+import DTO.OutputDTO;
+import core.exceptions.*;
 import model.Account;
 import service.IAccountService;
 import service.ImplementAccountService;
 import validation.Validator;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -39,8 +37,33 @@ public class Main {
                         createNewAccount();
                         break;
                     case "2":
-
+                        updateAccount();
+                        break;
+                    case "3":
+                        deleteAccount();
+                        break;
+                    case "4":
+                        deposit();
+                        break;
+                    case "5":
+                        withdraw();
+                        break;
+                    case "6":
+                        OutputDTO foundAccount = ibanSearch();
+                        System.out.println(foundAccount);
+                        break;
+                    case "7":
+                        List<OutputDTO> accounts = nameSearch();
+                        accounts.forEach(System.out::println);
+                        break;
+                    case "8":
+                        appExit();
+                        break;
+                    default:
+                        System.out.println("Invalid choice , please try again");
                 }
+            } catch (NegativeAmountException | InsufficientBalanceException | AccountNotFoundException  | DuplicateIbanException | DuplicateUsernameException | NumberFormatException e) {
+                System.out.println("Error" + e.getMessage());
             }
 
         }
@@ -59,23 +82,31 @@ public class Main {
         System.out.println("Please insert an option: ");
     }
 
-    public static void createNewAccount() throws DuplicateIbanException, DuplicateUsernameException , NegativeAmountException {
+    public static void createNewAccount() throws DuplicateIbanException, DuplicateUsernameException , NegativeAmountException,NumberFormatException{
+
         System.out.println("Please insert your iban");
-        iban = scanner.nextLine();
+        System.out.println("Iban must start with 'GR' followed by 5 digits");
+        iban = scanner.nextLine().trim();
         System.out.println("Please insert your first name");
-        firstname = scanner.nextLine();
+        firstname = scanner.nextLine().trim();
         System.out.println("Please insert your last name");
-        lastname = scanner.nextLine();
-        System.out.println("Please insert your balance");
-        BigDecimal balance = new BigDecimal(scanner.nextLine());
+        lastname = scanner.nextLine().trim();
+        BigDecimal balance;
+        try {
+            System.out.println("Please insert your balance");
+            balance = new BigDecimal(scanner.nextLine().trim());
+        }catch (NumberFormatException e){
+            System.out.println("Invalid number format.Please try again");
+            return;
+        }
         System.out.println("Please insert your email");
-        email = scanner.nextLine();
+        email = scanner.nextLine().trim();
         System.out.println("Please insert your username");
-        System.out.println("Username must be 1–8 characters long, include at least one lowercase letter, one uppercase letter, and one digit. Only letters and numbers allowed.");
-        username = scanner.nextLine();
+        System.out.println("Username must be 3–15 characters long, include at least one lowercase letter, one uppercase letter, and one digit. Only letters and numbers allowed.");
+        username = scanner.nextLine().trim();
         System.out.println("Please insert your password");
-        System.out.println("Password must be 4-12 characters long, include at least one lowercase letter, one uppercase letter, one digit and one special character.");
-        password = scanner.nextLine();
+        System.out.println("Password must be 4-15 characters long, include at least one lowercase letter, one uppercase letter, one digit and one special character.");
+        password = scanner.nextLine().trim();
         InputDTO dto = new InputDTO(iban,balance,firstname,lastname,email,username,password);
 
         Map<String,String> errors;
@@ -83,7 +114,7 @@ public class Main {
 
         if (!errors.isEmpty()){
             errors.forEach((k,v)-> System.out.println(v));
-            System.out.printf("%s Account was not created.Please try again", LocalDateTime.now());
+            System.out.println("Account was not created.Please try again");
             return ;
         }
 
@@ -92,17 +123,8 @@ public class Main {
     }
 
     public static void updateAccount() throws AccountNotFoundException {
-        System.out.println("Enter your username");
-        username = scanner.nextLine();
-        System.out.println("Enter your password");
-        password = scanner.nextLine();
 
-        Account account;
-        try {
-            account = service.authenticate(username,password);
-        } catch (AccountNotFoundException e) {
-            throw new AccountNotFoundException("Invalid credentials");
-        }
+        Account account = accountLogin();
 
         System.out.println("Which field would you like to update? (email, username, password, all):");
         String choice = scanner.nextLine().toLowerCase();
@@ -110,11 +132,11 @@ public class Main {
         switch (choice){
             case "email":
                 System.out.println("Please enter new email");
-                account.setEmail(scanner.nextLine());
+                account.setEmail(scanner.nextLine().trim());
                 break;
             case "username":
                 System.out.println("Please enter new username");
-                account.setUsername(scanner.nextLine());
+                account.setUsername(scanner.nextLine().trim());
                 break;
             case "password":
                 String newPassword;
@@ -122,9 +144,9 @@ public class Main {
 
                 while (true) {
                     System.out.println("Please enter new password");
-                    newPassword = scanner.nextLine();
+                    newPassword = scanner.nextLine().trim();
                     System.out.println("Please confirm new password");
-                    confirmPassword = scanner.nextLine();
+                    confirmPassword = scanner.nextLine().trim();
 
                     if (!newPassword.equals(confirmPassword)){
                         System.out.println("Passwords don't match.Please try again");
@@ -137,18 +159,18 @@ public class Main {
                 break;
             case "all":
                 System.out.println("Please enter new email");
-                account.setEmail(scanner.nextLine());
+                account.setEmail(scanner.nextLine().trim());
                 System.out.println("Please enter new username");
-                account.setUsername(scanner.nextLine());
+                account.setUsername(scanner.nextLine().trim());
 
                 String password1;
                 String password2;
 
                 while (true) {
                     System.out.println("Please enter new password");
-                    password1 = scanner.nextLine();
+                    password1 = scanner.nextLine().trim();
                     System.out.println("Please confirm new password");
-                    password2 = scanner.nextLine();
+                    password2 = scanner.nextLine().trim();
 
                     if (!password1.equals(password2)){
                         System.out.println("Passwords don't match.Please try again");
@@ -169,7 +191,7 @@ public class Main {
                 account.getBalance(),
                 account.getFirstname(),
                 account.getLastname(),
-                account.getEmail(),
+                account.getUsername(),
                 account.getEmail(),
                 account.getPassword()
         );
@@ -183,5 +205,111 @@ public class Main {
 
         service.updateAccount(dto);
         System.out.println("Account updated successfully!");
+    }
+
+    public static void deleteAccount() throws AccountNotFoundException{
+        Account account = accountLogin();
+
+        while(true) {
+            System.out.println("Are you sure you want to permanently delete your account? (Y for yes , N for no");
+            String choice = scanner.nextLine();
+            if (choice.equals("Y") || choice.equals("y")){
+                System.out.println("Please re-enter your password");
+                String password = scanner.nextLine();
+                if (password.equals(account.getPassword())){
+                    service.removeAccount(account.getIban());
+                    System.out.println("Successfully deleted account");
+                    break;
+                }else {
+                    System.out.println("Invalid password , please try again");
+                }
+            }else if (choice.equals("N") || choice.equals("n")){
+                break;
+            }else {
+                System.out.println("Invalid choice. Please try again");
+            }
+        }
+    }
+
+    public static void deposit() throws AccountNotFoundException{
+        Account account = accountLogin();
+
+        while (true) {
+            System.out.println("Please insert the amount you want to deposit");
+            try {
+                BigDecimal amount = new BigDecimal(scanner.nextLine());
+                service.deposit(account.getIban(), amount);
+                break;
+            } catch (NegativeAmountException e) {
+                System.out.println("The amount you entered is negative.Please try again");
+            }catch (NumberFormatException e){
+                System.out.println("The amount you entered is not valid.Please try again");
+            }
+        }
+    }
+
+    public static void withdraw() throws AccountNotFoundException,InsufficientBalanceException{
+        Account account = accountLogin();
+
+        while (true) {
+            System.out.println("Please insert the amount you want to withdraw");
+            try {
+                BigDecimal amount = new BigDecimal(scanner.nextLine());
+                service.withdraw(account.getIban(), amount);
+                break;
+            }catch (NegativeAmountException e) {
+                System.out.println("The amount you entered is negative.Please try again");
+            }catch (NumberFormatException e){
+                System.out.println("The amount you entered is not valid.Please try again");
+            }catch (InsufficientBalanceException e) {
+                System.out.println("Your balance is not sufficient for this withdrawal");
+            }
+        }
+    }
+
+    public static OutputDTO ibanSearch() throws AccountNotFoundException{
+        System.out.println("Please insert Iban");
+        String iban = scanner.nextLine();
+
+        try {
+            return service.getAccountByIban(iban);
+        } catch (AccountNotFoundException e) {
+            throw e;
+        }
+    }
+
+    public static List<OutputDTO> nameSearch() throws AccountNotFoundException{
+        System.out.println("Please insert firstname");
+        String firstname = scanner.nextLine();
+        System.out.println("Please insert lastname");
+        String lastname = scanner.nextLine();
+
+        try {
+            return service.getAccountsByName(firstname,lastname);
+        } catch (AccountNotFoundException e) {
+            throw e;
+        }
+    }
+
+    public static void appExit() {
+        scanner.close();
+        System.out.println("Exiting app...");
+    }
+
+
+
+    private static Account accountLogin() throws AccountNotFoundException{
+        System.out.println("Enter your username");
+        username = scanner.nextLine();
+        System.out.println("Enter your password");
+        password = scanner.nextLine();
+
+        Account account;
+        try {
+            account = service.authenticate(username,password);
+        } catch (AccountNotFoundException e) {
+            throw e;
+        }
+        return account;
     }
 }
