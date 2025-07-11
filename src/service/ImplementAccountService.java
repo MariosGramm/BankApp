@@ -35,11 +35,11 @@ public class ImplementAccountService implements IAccountService{
             Account account = Mapper.mapToModelEntity(dto);
 
             if (accountDAO.getByIban(account.getIban()).isPresent()){
-                throw new DuplicateIbanException("The provided IBAN" + account.getIban()+ "belongs to an existing account");
+                throw new DuplicateIbanException(" The provided IBAN" + account.getIban()+ " belongs to an existing account");
             }
 
             if (accountDAO.getByUsername(account.getUsername()).isPresent()){
-                throw new DuplicateUsernameException("The provided username" + account.getUsername() + "belongs to an existing account");
+                throw new DuplicateUsernameException(" The provided username" + account.getUsername() + " belongs to an existing account");
             }
 
             if (dto.getBalance().compareTo(BigDecimal.ZERO) < 0){
@@ -49,13 +49,13 @@ public class ImplementAccountService implements IAccountService{
             accountDAO.saveOrUpdate(account);
             return true;
         }catch (DuplicateIbanException e){
-            System.err.printf("%s.IBAN is unique for every account \n %s",LocalDateTime.now(),e);
+            System.err.printf("[%s] [ERROR] Duplicate IBAN detected: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }catch (DuplicateUsernameException e){
-            System.err.printf("%s.Username is unique for every account \n %s",LocalDateTime.now(),e);
+            System.err.printf("[%s] [ERROR] Duplicate username detected: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }catch (NegativeAmountException e){
-            System.err.printf("%s.The amount provided (%f) is negative. \n %s" , LocalDateTime.now(),dto.getBalance(),e);
+            System.err.printf("[%s] [ERROR] Amount cannot be negative: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }
     }
@@ -70,7 +70,7 @@ public class ImplementAccountService implements IAccountService{
             account.setUsername(dto.getUsername());
             return true;
         }catch (AccountNotFoundException e){
-            System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(),dto.getIban(),e);
+            System.err.printf("[%s] [ERROR] Account not found: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }
     }
@@ -85,7 +85,7 @@ public class ImplementAccountService implements IAccountService{
             return true;
 
         } catch  (AccountNotFoundException e){
-            System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(),iban,e);
+            System.err.printf("[%s] [ERROR] Account not found: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }
     }
@@ -103,10 +103,10 @@ public class ImplementAccountService implements IAccountService{
             account.setBalance(account.getBalance().add(amount));
             accountDAO.saveOrUpdate(account);
         }catch (AccountNotFoundException e) {
-            System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(), iban, e);
+            System.err.printf("[%s] [ERROR] Account not found: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }catch (NegativeAmountException e){
-            System.err.printf("%s.The amount provided (%f) is negative. \n %s" , LocalDateTime.now(),amount,e);
+            System.err.printf("[%s] [ERROR] Amount cannot be negative: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }
 
@@ -129,13 +129,13 @@ public class ImplementAccountService implements IAccountService{
             account.setBalance(account.getBalance().subtract(amount));
             accountDAO.saveOrUpdate(account);
         }catch (AccountNotFoundException e) {
-            System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(), iban, e);
+            System.err.printf("[%s] [ERROR] Account not found: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }catch (NegativeAmountException e){
-            System.err.printf("%s.The amount provided (%f) is negative. \n %s" , LocalDateTime.now(),amount,e);
+            System.err.printf("[%s] [ERROR] Amount cannot be negative: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }catch (InsufficientBalanceException e){
-            System.err.printf("%s.The amount provided (%f) is greater than the balance. \n %s",LocalDateTime.now(),amount,e);
+            System.err.printf("[%s] [ERROR] Balance not sufficient: %s\n", LocalDateTime.now(), e.getMessage());
         }
     }
 
@@ -147,7 +147,7 @@ public class ImplementAccountService implements IAccountService{
 
             return new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(),account.getEmail(),account.getUsername());
         }catch (AccountNotFoundException e){
-            System.err.printf("%s.The account with iban %s was not found. \n %s", LocalDateTime.now(), iban, e);
+            System.err.printf("[%s] [ERROR] Account not found: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }
     }
@@ -163,7 +163,7 @@ public class ImplementAccountService implements IAccountService{
 
             return new ArrayList<>(accounts.stream().map((account) -> new OutputDTO(account.getIban(), account.getBalance(), account.getFirstname(), account.getLastname(), account.getEmail(), account.getUsername())).collect(Collectors.toList()));
         }catch (AccountNotFoundException e){
-            System.err.printf("%s.The account with the name [%s + %s] was not found. \n %s", LocalDateTime.now(), lastname,firstname, e);
+            System.err.printf("[%s] [ERROR] Account not found: %s\n", LocalDateTime.now(), e.getMessage());
             throw e;
         }
     }
