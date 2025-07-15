@@ -14,8 +14,9 @@ public class ImplementAccountDAO implements IAccountDAO {
     public void saveOrUpdate(Account account) {
         if (accounts.contains(account)) {
             accounts.set(accounts.indexOf(account),account);
+        }else{
+            accounts.add(account);
         }
-        accounts.add(account);
     }
 
     @Override

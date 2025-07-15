@@ -69,7 +69,7 @@ public class Main {
         System.out.println("6.Search account by IBAN");
         System.out.println("7.Search account(or accounts) by Name");
         System.out.println("8.Exit");
-        System.out.println("Please insert an option: ");
+        System.out.println("Please insert an option(1-8): ");
     }
 
     public static void createNewAccount() {
