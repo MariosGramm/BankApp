@@ -58,7 +58,7 @@ public class Validator {
         }
     }
 
-    private static void validateEmail(String email,Map<String,String> errors) {
+    public static void validateEmail(String email,Map<String,String> errors) {
         if (email == null) {
             errors.put("email","Email is required");
         }else if (!email.matches("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")){
@@ -66,7 +66,7 @@ public class Validator {
         }
     }
 
-    private static void validateUsername(String username,Map<String,String> errors) {
+    public static void validateUsername(String username,Map<String,String> errors) {
         if (username == null) {
             errors.put("username","Username is required");
         }else if (!username.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[A-Za-z\\d]{3,15}$")){
@@ -74,11 +74,11 @@ public class Validator {
         }
     }
 
-    private static void validatePassword(String password,Map<String,String> errors) {
+    public static void validatePassword(String password,Map<String,String> errors) {
         if (password == null) {
             errors.put("password","Password is required");
         }else if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-\\[\\]{};':\"\\\\|,.<>/?]).{4,15}$")) {
-            errors.put("password", "Invalid username");
+            errors.put("password", "Invalid password");
         }
     }
 }
