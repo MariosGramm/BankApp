@@ -101,7 +101,7 @@ public class Main {
             String email = scanner.nextLine().trim();
 
             System.out.println("Please insert your username");
-            System.out.println("Username must be 3–15 characters long, include at least one lowercase letter, one uppercase letter, and one digit. Only letters and numbers allowed.");
+            System.out.println("Username must be 3-15 characters long, include at least one lowercase letter, one uppercase letter, and one digit. Only letters and numbers allowed.");
             String username = scanner.nextLine().trim();
 
             System.out.println("Please insert your password");

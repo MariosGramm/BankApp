@@ -1,0 +1,14 @@
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: terminal-banking-cluster
+  region: us-east-1
+
+nodeGroups:
+  - name: banking-nodes
+    instanceType: t3.micro
+    desiredCapacity: 1
+    minSize: 1
+    maxSize: 1
+    volumeSize: 10
