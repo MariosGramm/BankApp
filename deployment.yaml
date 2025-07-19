@@ -11,11 +11,8 @@ spec:
     metadata:
       labels:
         app: banking-app
-      spec:
-        containers:
-          - name: banking-app
-            image: 471112749395.dkr.ecr.us-east-1.amazonaws.com/banking-app:latest
-            imagePullPolicy: Always
-            command: ["java", "-jar", "BankApp.jar"]
-            ports:
-              - containerPort: 8080
+    spec:
+      containers:
+        - name: banking-app
+          image: 471112749395.dkr.ecr.us-east-1.amazonaws.com/banking-app:latest
+          command: ["java", "-jar", "BankApp.jar"]
