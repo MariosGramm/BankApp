@@ -14,5 +14,8 @@ spec:
     spec:
       containers:
         - name: banking-app
-          image: 471112749395.dkr.ecr.us-east-1.amazonaws.com/banking-app:latest
-          command: ["java", "-jar", "BankApp.jar"]
+          image: 471112749395.dkr.ecr.us-east-1.amazonaws.com/bankapp:latest
+          imagePullPolicy: Always
+          command: [ "sleep", "infinity" ]
+          stdin: true
+          tty: true
