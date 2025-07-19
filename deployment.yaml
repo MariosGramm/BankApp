@@ -7,13 +7,15 @@ spec:
   selector:
     matchLabels:
       app: banking-app
-    template:
-      metadata:
-        labels:
-          app: banking-app
+  template:
+    metadata:
+      labels:
+        app: banking-app
       spec:
         containers:
           - name: banking-app
             image: 471112749395.dkr.ecr.us-east-1.amazonaws.com/banking-app:latest
             imagePullPolicy: Always
-            command: ["java","Main"]
+            command: ["java", "-jar", "BankApp.jar"]
+            ports:
+              - containerPort: 8080

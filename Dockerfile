@@ -1,5 +1,4 @@
 FROM openjdk:17-slim
-WORKDIR /app/src
-COPY src /app/src
-RUN javac Main.java
-CMD ["java", "Main"]
+WORKDIR /app
+COPY out/artifacts/BankApp_jar/BankApp.jar app/BankApp.jar
+CMD ["java","-jar", "BankApp.jar"]
